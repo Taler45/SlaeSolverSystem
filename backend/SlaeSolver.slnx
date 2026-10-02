@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SlaeSolver.API/SlaeSolver.API.csproj" />
+  <Project Path="SlaeSolver.BLL/SlaeSolver.BLL.csproj" />
+  <Project Path="SlaeSolver.DataAccess/SlaeSolver.DataAccess.csproj" />
+  <Project Path="SlaeSolver.Domain/SlaeSolver.Domain.csproj" />
+</Solution>

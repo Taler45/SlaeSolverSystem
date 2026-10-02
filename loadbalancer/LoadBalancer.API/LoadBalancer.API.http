@@ -1,0 +1,6 @@
+@LoadBalancer.API_HostAddress = http://localhost:5118
+
+GET {{LoadBalancer.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
