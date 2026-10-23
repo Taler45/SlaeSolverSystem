@@ -12,8 +12,8 @@ using SlaeSolver.DataAccess.Persistence;
 namespace SlaeSolver.DataAccess.Migrations
 {
     [DbContext(typeof(SlaeSolverContext))]
-    [Migration("20261003091354_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261023135311_InitialCreat")]
+    partial class InitialCreat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,9 +35,7 @@ namespace SlaeSolver.DataAccess.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsCanceled")
                         .ValueGeneratedOnAdd()
@@ -81,9 +79,7 @@ namespace SlaeSolver.DataAccess.Migrations
                         {
                             t.HasCheckConstraint("CK_Matrix_Size", "\"MatrixSize\">0");
 
-                            t.HasCheckConstraint("CK_Progress", "\"Progress\">0 and \"Progress\"<101");
-
-                            t.HasCheckConstraint("CK_Progress_p", "\"Progress\">0 and \"Progress\"<=100");
+                            t.HasCheckConstraint("CK_Progress_p", "\"Progress\">=0 and \"Progress\"<=100");
                         });
                 });
 

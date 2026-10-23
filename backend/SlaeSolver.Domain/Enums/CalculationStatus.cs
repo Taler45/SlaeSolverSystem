@@ -1,6 +1,6 @@
 ﻿namespace SlaeSolver.Domain;
 
-public enum TaskStatus
+public enum CalculationStatus
 {
     Queued,
     InProgress,

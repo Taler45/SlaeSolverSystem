@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SlaeSolver.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,7 +38,7 @@ namespace SlaeSolver.DataAccess.Migrations
                     Progress = table.Column<int>(type: "integer", nullable: false),
                     IsCanceled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     ResultFilePath = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     StartedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -47,8 +47,7 @@ namespace SlaeSolver.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Id);
                     table.CheckConstraint("CK_Matrix_Size", "\"MatrixSize\">0");
-                    table.CheckConstraint("CK_Progress", "\"Progress\">0 and \"Progress\"<101");
-                    table.CheckConstraint("CK_Progress_p", "\"Progress\">0 and \"Progress\"<=100");
+                    table.CheckConstraint("CK_Progress_p", "\"Progress\">=0 and \"Progress\"<=100");
                     table.ForeignKey(
                         name: "FK_Tasks_Users_UserId",
                         column: x => x.UserId,
