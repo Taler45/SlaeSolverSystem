@@ -21,25 +21,12 @@ public class UserRepository: IUserRepository
 
     public async Task<UserEntitie?> GetUserByEmailAsync(string email)
     {
-        var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
-        
-        if (user is null)
-        {
-            return null;
-        }
-
-        return user;
+        return await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<UserEntitie?> GetUserByIdAsync(Guid id)
     {
-        var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
-        if (user == null)
-        {
-            return null;
-        }
-
-        return user;
+        return  await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task AddUserAsync(UserEntitie user)
