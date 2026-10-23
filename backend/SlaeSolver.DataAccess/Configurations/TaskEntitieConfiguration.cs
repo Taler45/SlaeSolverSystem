@@ -20,7 +20,7 @@ public class TaskEntitieConfiguration: IEntityTypeConfiguration<TaskEntitie>
         builder.ToTable("Tasks", t =>
             {
                 t.HasCheckConstraint("CK_Matrix_Size", "\"MatrixSize\">0");
-                t.HasCheckConstraint("CK_Progress_p", "\"Progress\">0 and \"Progress\"<=100");
+                t.HasCheckConstraint("CK_Progress_p", "\"Progress\">=0 and \"Progress\"<=100");
             }
         );
 
@@ -34,9 +34,6 @@ public class TaskEntitieConfiguration: IEntityTypeConfiguration<TaskEntitie>
 
         builder.Property(t => t.Progress)
             .IsRequired();
-        builder.ToTable("Tasks", t =>
-            t.HasCheckConstraint("CK_Progress", "\"Progress\">0 and \"Progress\"<101")
-        );
         
         builder.Property(t => t.IsCanceled)
             .IsRequired()
@@ -47,8 +44,7 @@ public class TaskEntitieConfiguration: IEntityTypeConfiguration<TaskEntitie>
             .HasMaxLength(500);
 
         builder.Property(t => t.CreatedAt)
-            .IsRequired()
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            .IsRequired();
 
         builder.Property(t => t.StartedAt)
             .IsRequired(false);
