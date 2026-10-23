@@ -34,6 +34,10 @@ namespace SlaeSolver.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<bool>("IsCanceled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -70,7 +74,9 @@ namespace SlaeSolver.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CreatedAt", "Status");
+
+                    b.HasIndex("UserId", "Status");
 
                     b.ToTable("Tasks", null, t =>
                         {

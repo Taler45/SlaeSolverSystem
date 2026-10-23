@@ -51,5 +51,15 @@ public class TaskEntitieConfiguration: IEntityTypeConfiguration<TaskEntitie>
 
         builder.Property(t => t.CompletedAt)
             .IsRequired(false);
+
+        builder.Property(t => t.ErrorMessage)
+            .IsRequired(false)
+            .HasMaxLength(500);
+
+        builder.Ignore(t => t.IsActive);
+        
+        builder.HasIndex(t => new { t.UserId, t.Status });
+
+        builder.HasIndex(t => new { t.CreatedAt, t.Status });
     }
 }
