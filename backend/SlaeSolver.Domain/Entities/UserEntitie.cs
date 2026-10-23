@@ -1,4 +1,6 @@
-﻿namespace SlaeSolver.Domain.Entities;
+﻿using SlaeSolver.Domain.Exceptions;
+
+namespace SlaeSolver.Domain.Entities;
 
 public class UserEntitie
 {
@@ -25,30 +27,34 @@ public class UserEntitie
         PasswordHash = passwordHash;
     }
 
-
+    public static string NormalizeEmail(string email)
+    {
+        return email.ToLowerInvariant().Trim();
+    }
+    
     public static UserEntitie Create(string firstName, string lastName, string email, string passwordHash)
     {
-        if (string.IsNullOrEmpty(firstName) || firstName.Length > USER_NAME_LENGTH)
+        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > USER_NAME_LENGTH)
         {
-            throw new ArgumentException();
+            throw new DomainException("Ім'я порожнє або довше 100 символів");
         }
 
-        if (string.IsNullOrEmpty(lastName) || lastName.Length > USER_NAME_LENGTH)
+        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > USER_NAME_LENGTH)
         {
-            throw new ArgumentException();
+            throw new DomainException("Прізвище порожнє або довше 100;");
         }
 
-        if (string.IsNullOrEmpty(email) || email.Length > EMAIL_AND_PASSWORD_LENGTH || !email.Contains("@"))
+        if (string.IsNullOrWhiteSpace(email) || email.Length > EMAIL_AND_PASSWORD_LENGTH || !email.Contains("@"))
         {
-            throw new ArgumentException();
+            throw new DomainException("email порожній, довший 255 або без @");
         }
 
-        if (string.IsNullOrEmpty(passwordHash) || passwordHash.Length > EMAIL_AND_PASSWORD_LENGTH)
+        if (string.IsNullOrWhiteSpace(passwordHash) || passwordHash.Length > EMAIL_AND_PASSWORD_LENGTH)
         {
-            throw new ArgumentException();
+            throw new DomainException("хеш пароля порожній");
         }
 
-        return new UserEntitie (Guid.NewGuid(), firstName, lastName, email, passwordHash);
+        return new UserEntitie (Guid.NewGuid(), firstName, lastName, NormalizeEmail(email), passwordHash);
     }
     
     
