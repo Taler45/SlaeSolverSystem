@@ -7,6 +7,7 @@ using SlaeSolver.API.Infrastructure;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Security;
 using SlaeSolver.BLL.Services.Auth;
+using SlaeSolver.BLL.Storage;
 using SlaeSolver.DataAccess.Repositories;
 using SlaeSolver.Domain.Repositories;
 
@@ -20,12 +21,18 @@ builder.Services.AddDbContext<SlaeSolverContext>(
 );
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IJWTProvider, JWTProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
+
+
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<LimitsOptions>(builder.Configuration.GetSection("Limits"));
 builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Storage"));
+
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
