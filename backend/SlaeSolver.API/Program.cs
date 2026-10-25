@@ -18,6 +18,7 @@ builder.Services.AddDbContext<SlaeSolverContext>(
     option => option.UseNpgsql(configuration.GetConnectionString(nameof(SlaeSolverContext)))
 );
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IJWTProvider, JWTProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
