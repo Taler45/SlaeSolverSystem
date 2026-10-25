@@ -1,4 +1,4 @@
-﻿namespace SlaeSolver.BLL.DTOs;
+﻿namespace SlaeSolver.BLL.DTOs.Auth;
 
 public record AuthRequest(
     string? Email,

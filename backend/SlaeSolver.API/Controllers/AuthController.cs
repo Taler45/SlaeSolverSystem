@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SlaeSolver.BLL.DTOs;
+using SlaeSolver.BLL.DTOs.Auth;
 using SlaeSolver.BLL.Services.Auth;
 
 namespace SlaeSolver.API.Controllers;

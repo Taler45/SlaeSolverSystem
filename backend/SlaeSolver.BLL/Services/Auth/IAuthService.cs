@@ -1,4 +1,4 @@
-﻿using SlaeSolver.BLL.DTOs;
+﻿using SlaeSolver.BLL.DTOs.Auth;
 
 namespace SlaeSolver.BLL.Services.Auth;
 
