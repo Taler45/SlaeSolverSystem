@@ -4,6 +4,7 @@ using SlaeSolver.DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SlaeSolver.API.Infrastructure;
+using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Security;
 using SlaeSolver.BLL.Services.Auth;
 using SlaeSolver.DataAccess.Repositories;
@@ -23,6 +24,8 @@ builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IJWTProvider, JWTProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<LimitsOptions>(builder.Configuration.GetSection("Limits"));
+builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Storage"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
