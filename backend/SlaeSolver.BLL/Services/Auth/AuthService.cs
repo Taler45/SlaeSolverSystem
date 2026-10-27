@@ -1,4 +1,4 @@
-﻿using SlaeSolver.BLL.DTOs;
+﻿using SlaeSolver.BLL.DTOs.Auth;
 using SlaeSolver.BLL.Security;
 using SlaeSolver.Domain.Entities;
 using SlaeSolver.Domain.Exceptions;
