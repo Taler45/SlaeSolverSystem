@@ -31,6 +31,7 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<LimitsOptions>(builder.Configuration.GetSection("Limits"));
 builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Storage"));
+builder.Services.Configure<SolverOptions>(builder.Configuration.GetSection("Solver"));
 
 
 
