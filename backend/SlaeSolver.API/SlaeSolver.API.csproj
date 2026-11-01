@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SlaeSolver.BLL\SlaeSolver.BLL.csproj" />
     <ProjectReference Include="..\SlaeSolver.Domain\SlaeSolver.Domain.csproj" />
+    <ProjectReference Include="..\SlaeSolver.DataAccess\SlaeSolver.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
