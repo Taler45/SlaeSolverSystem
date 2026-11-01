@@ -56,6 +56,50 @@ public class TaskRepository: ITaskRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<Guid?> ClaimNextQueuedAsync(string serverId)
+    {
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        var candidates = await _context.Tasks
+            .FromSql($"""
+                      SELECT * FROM "Tasks"
+                      WHERE "Status" = 'Queued'
+                      ORDER BY "CreatedAt"
+                      LIMIT 1
+                      FOR UPDATE SKIP LOCKED
+                      """)
+            .ToListAsync();
+
+        var task = candidates.FirstOrDefault();
+
+        if (task is null)
+        {
+            await transaction.CommitAsync();
+            return null;
+        }
+
+        task.Start(serverId);
+        await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
+
+        return task.Id;
+    }
+
+    public async Task UpdateProgressAsync(Guid id, int progress)
+    {
+        await _context.Tasks
+            .Where(t => t.Id == id
+                        && t.Status == CalculationStatus.InProgress
+                        && t.Progress < progress)
+            .ExecuteUpdateAsync(s => s.SetProperty(t => t.Progress, progress));
+    }
+
+    public async Task<IEnumerable<TaskEntitie>> GetInProgressByServerAsync(string serverId)
+    {
+        return await _context.Tasks.Where(t => t.Status == CalculationStatus.InProgress && t.ServerId == serverId)
+            .ToListAsync();
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

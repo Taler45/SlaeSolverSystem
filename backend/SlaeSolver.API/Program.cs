@@ -4,6 +4,7 @@ using SlaeSolver.DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SlaeSolver.API.Infrastructure;
+using SlaeSolver.API.Workers;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Security;
 using SlaeSolver.BLL.Services.Auth;
@@ -28,10 +29,13 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 
+builder.Services.AddHostedService<TaskExecutor>();
+
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<LimitsOptions>(builder.Configuration.GetSection("Limits"));
 builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Storage"));
 builder.Services.Configure<SolverOptions>(builder.Configuration.GetSection("Solver"));
+builder.Services.Configure<ServerOptions>(builder.Configuration.GetSection("Server"));
 
 
 

@@ -6,6 +6,7 @@ public class TaskEntitie
 {
     public const int PATH_MAX_LENGTH = 500;
     public const int SERVER_ID_MAX_LENGTH = 50;
+    public const int ERROR_MAX_LENGTH = 500;
     public Guid Id { get; private set; }
     public string ParameterFilePath { get; private set; } = string.Empty;
     public int MatrixSize { get; private set; }
@@ -61,6 +62,10 @@ public class TaskEntitie
         if (Status != CalculationStatus.Queued)
         {
             throw new DomainException($"Неможна запускати задачу зі статусом {Status}");
+        }
+        if (string.IsNullOrWhiteSpace(serverId) || serverId.Length > SERVER_ID_MAX_LENGTH)
+        {
+            throw new DomainException("Некоректний ідентифікатор сервера");
         }
 
         Status = CalculationStatus.InProgress;
@@ -129,6 +134,14 @@ public class TaskEntitie
         if (!IsActive)
         {
             throw new DomainException($"Не можна позначити помилкою задачу зі статусом {Status}");
+        }
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            message = "Невідома помилка";
+        }
+        if (message.Length > ERROR_MAX_LENGTH)
+        {
+            message = message.Substring(0, ERROR_MAX_LENGTH);
         }
 
         ErrorMessage = message;
