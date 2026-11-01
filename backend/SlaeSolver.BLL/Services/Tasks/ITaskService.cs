@@ -1,4 +1,5 @@
-﻿using SlaeSolver.BLL.DTOs.Tasks;
+﻿using SlaeSolver.BLL.DTOs;
+using SlaeSolver.BLL.DTOs.Tasks;
 
 namespace SlaeSolver.BLL.Services.Tasks;
 
@@ -8,4 +9,5 @@ public interface ITaskService
     Task<TaskDto> GetAsync(Guid userId,Guid taskId);
     Task<IEnumerable<TaskDto>> GetHistoryAsync(Guid userId,int page, int pageSize);
     Task<TaskDto> CancelAsync(Guid userId,Guid taskId);
+    Task<TaskResultDto> GetResultAsync(Guid userId, Guid taskId);
 }

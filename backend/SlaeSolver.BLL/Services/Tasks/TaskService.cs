@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Options;
+using SlaeSolver.BLL.DTOs;
 using SlaeSolver.BLL.DTOs.Tasks;
 using SlaeSolver.BLL.Models;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Solver;
 using SlaeSolver.BLL.Storage;
+using SlaeSolver.Domain;
 using SlaeSolver.Domain.Entities;
 using SlaeSolver.Domain.Exceptions;
 using SlaeSolver.Domain.Repositories;
@@ -159,5 +161,23 @@ public class TaskService: ITaskService
 
         return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
             task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt);
+    }
+
+    public async Task<TaskResultDto> GetResultAsync(Guid userId, Guid taskId)
+    {
+        var task = await _taskRepository.GetByIdForUserAsync(taskId, userId);
+        if (task is null)
+        {
+            throw new NotFoundException("Задачу не знайдено");
+        }
+
+        if (task.Status != CalculationStatus.Done || string.IsNullOrWhiteSpace(task.ResultFilePath))
+        {
+            throw new DomainException($"Результат ще не готовий, статус задачі: {task.Status.ToString()}");
+        }
+
+        var result = await _fileStorage.ReadResultAsync(task.ResultFilePath);
+
+        return new TaskResultDto(task.Id, result.Solution, result.Iterations, result.Residual);
     }
 }

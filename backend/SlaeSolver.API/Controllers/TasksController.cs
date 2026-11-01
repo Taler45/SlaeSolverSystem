@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SlaeSolver.API.Infrastructure;
+using SlaeSolver.BLL.DTOs;
 using SlaeSolver.BLL.DTOs.Tasks;
 using SlaeSolver.BLL.Services.Tasks;
 
@@ -42,6 +43,12 @@ public class TasksController: ControllerBase
     public async Task<ActionResult<TaskDto>> Cancel([FromRoute] Guid id)
     {
         return Ok(await _taskService.CancelAsync(User.GetUserId(), id));
+    }
+
+    [HttpGet("{id:guid}/result")]
+    public async Task<ActionResult<TaskResultDto>> GetResult([FromRoute] Guid id)
+    {
+        return Ok(await _taskService.GetResultAsync(User.GetUserId(), id));
     }
     
 }
