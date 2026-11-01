@@ -10,5 +10,9 @@ public interface ITaskRepository
     Task<IEnumerable<TaskEntitie>> GetByUserAsync(Guid userId, int page, int pageSize);
     Task<int> CountActiveByUserAsync(Guid userId);
     Task<bool> IsCancelRequestedAsync(Guid id);
+    Task<Guid?> ClaimNextQueuedAsync(string serverId);
+    Task UpdateProgressAsync(Guid id, int progress);
+    Task<IEnumerable<TaskEntitie>> GetInProgressByServerAsync(string serverId);
+    
     Task SaveChangesAsync ();
 }
