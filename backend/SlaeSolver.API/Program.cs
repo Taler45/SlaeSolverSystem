@@ -40,7 +40,15 @@ builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Sto
 builder.Services.Configure<SolverOptions>(builder.Configuration.GetSection("Solver"));
 builder.Services.Configure<ServerOptions>(builder.Configuration.GetSection("Server"));
 
+if (string.IsNullOrWhiteSpace(configuration["Jwt:SecretKey"]))
+{
+    throw new InvalidOperationException("Не задано Jwt:SecretKey");
+}
 
+if (string.IsNullOrWhiteSpace(configuration["Server:InternalApiKey"]))
+{
+    throw new InvalidOperationException("Не задано Server:InternalApiKey");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
