@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SlaeSolver.API.Infrastructure;
-using SlaeSolver.BLL.DTOs;
 using SlaeSolver.BLL.DTOs.Tasks;
 using SlaeSolver.BLL.Services.Tasks;
 

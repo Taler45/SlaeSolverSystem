@@ -1,4 +1,4 @@
-﻿namespace SlaeSolver.BLL.DTOs;
+﻿namespace SlaeSolver.BLL.DTOs.Tasks;
 
 public record TaskResultDto(
     Guid TaskId,

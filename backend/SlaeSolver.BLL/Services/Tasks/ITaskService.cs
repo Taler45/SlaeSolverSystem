@@ -1,5 +1,4 @@
-﻿using SlaeSolver.BLL.DTOs;
-using SlaeSolver.BLL.DTOs.Tasks;
+﻿using SlaeSolver.BLL.DTOs.Tasks;
 
 namespace SlaeSolver.BLL.Services.Tasks;
 

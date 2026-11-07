@@ -45,6 +45,11 @@ public class TaskEntitie
         {
             throw new DomainException("Некоректний ідентифікатор користувача");
         }
+
+        if (id == Guid.Empty)
+        {
+            throw new DomainException("Некоректний ідентифікатор задачі");
+        }
         if (matrixSize <= 0)
         {
             throw new DomainException("Кількість невідомих має бути більшою за нуль");
@@ -73,21 +78,7 @@ public class TaskEntitie
         ServerId = serverId;
         
     }
-
-    public void UpdateProgress(int percent)
-    {
-        if (Status != CalculationStatus.InProgress)
-        {
-            throw new DomainException($"Не можна оновити прогрес задачі зі статусом {Status}");
-        }
-
-        percent = Math.Clamp(percent, 0, 100);
-        if (percent > Progress)
-        {
-            Progress = percent; 
-        }
-        
-    }
+    
     
     public void RequestCancel()
     {
