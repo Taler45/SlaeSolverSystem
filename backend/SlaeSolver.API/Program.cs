@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SlaeSolver.API.Infrastructure;
 using SlaeSolver.API.Workers;
+using SlaeSolver.BLL.Execution;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Security;
 using SlaeSolver.BLL.Services.Auth;
@@ -28,6 +29,8 @@ builder.Services.AddTransient<IJWTProvider, JWTProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddSingleton<RunningTasksRegistry>();
+builder.Services.AddSingleton<TaskQueueSignal>();
 
 builder.Services.AddHostedService<TaskExecutor>();
 
@@ -37,7 +40,15 @@ builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Sto
 builder.Services.Configure<SolverOptions>(builder.Configuration.GetSection("Solver"));
 builder.Services.Configure<ServerOptions>(builder.Configuration.GetSection("Server"));
 
+if (string.IsNullOrWhiteSpace(configuration["Jwt:SecretKey"]))
+{
+    throw new InvalidOperationException("Не задано Jwt:SecretKey");
+}
 
+if (string.IsNullOrWhiteSpace(configuration["Server:InternalApiKey"]))
+{
+    throw new InvalidOperationException("Не задано Server:InternalApiKey");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
