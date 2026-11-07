@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using SlaeSolver.BLL.Execution;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Solver;
 using SlaeSolver.BLL.Storage;
@@ -14,9 +15,12 @@ public class TaskExecutor: BackgroundService
     private readonly SolverOptions _solverOptions;
     private readonly ILogger<TaskExecutor> _logger;
     private readonly SemaphoreSlim _slots;
+    private readonly RunningTasksRegistry _registry;
+    private readonly TaskQueueSignal _signal;
 
     public TaskExecutor(IServiceScopeFactory scopeFactory, IOptions<ServerOptions> serverOptions,
-        IOptions<LimitsOptions> limitsOptions, IOptions<SolverOptions> solverOptions, ILogger<TaskExecutor> logger)
+        IOptions<LimitsOptions> limitsOptions, IOptions<SolverOptions> solverOptions, ILogger<TaskExecutor> logger,
+        RunningTasksRegistry runningTasksRegistry, TaskQueueSignal signal)
     {
         _scopeFactory = scopeFactory;
         _limitsOptions = limitsOptions.Value;
@@ -24,6 +28,8 @@ public class TaskExecutor: BackgroundService
         _serverOptions = serverOptions.Value;
         _logger = logger;
         _slots = new SemaphoreSlim(_serverOptions.MaxConcurrentTasks);
+        _signal = signal;
+        _registry = runningTasksRegistry;
 
     }
     
@@ -32,16 +38,13 @@ public class TaskExecutor: BackgroundService
         _logger.LogInformation("Сервер {ServerId}: виконавець запущено, слотів {Slots}",
             _serverOptions.ServerId, _serverOptions.MaxConcurrentTasks);
         await RecoverStuckTasksAsync();
-        
-        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_serverOptions.PollIntervalSeconds));
-
+       
         try
         {
-            do
-            {
+            while (!stoppingToken.IsCancellationRequested){
                 await TakeTasksWhileSlotsFreeAsync(stoppingToken);
-            } while (await timer.WaitForNextTickAsync(stoppingToken));
-
+                await _signal.WaitAsync(TimeSpan.FromSeconds(_serverOptions.PollIntervalSeconds), stoppingToken);
+            }
         }
         catch (OperationCanceledException)
         {
@@ -87,7 +90,9 @@ public class TaskExecutor: BackgroundService
                 }
                 finally
                 {
+                    _registry.Remove(taskId.Value);
                     _slots.Release();
+                    _signal.Notify();
                 }
             });
         }
@@ -133,6 +138,7 @@ public class TaskExecutor: BackgroundService
     {
         return;
     }
+    _registry.Add(taskId, task.MatrixSize);
 
     var state = new ExecutionState();
     using var solveCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);

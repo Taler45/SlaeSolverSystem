@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using SlaeSolver.BLL.DTOs.Tasks;
+using SlaeSolver.BLL.Execution;
 using SlaeSolver.BLL.Models;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Solver;
@@ -15,13 +16,16 @@ public class TaskService: ITaskService
 {
     private readonly IFileStorage _fileStorage;
     private readonly ITaskRepository _taskRepository;
+    private readonly TaskQueueSignal _signal;
     private readonly LimitsOptions _options;
 
-    public TaskService(IFileStorage storage, ITaskRepository taskRepository, IOptions<LimitsOptions> options)
+    public TaskService(IFileStorage storage, ITaskRepository taskRepository, 
+        IOptions<LimitsOptions> options, TaskQueueSignal signal)
     {
         _options = options.Value;
         _fileStorage = storage;
         _taskRepository = taskRepository;
+        _signal = signal;
     }
     
     
@@ -64,6 +68,7 @@ public class TaskService: ITaskService
         var task = TaskEntitie.Create(taskId, userId, request.MatrixSize, path);
         await _taskRepository.AddAsync(task);
         await _taskRepository.SaveChangesAsync();
+        _signal.Notify();
 
         return ToDto(task);
     }
