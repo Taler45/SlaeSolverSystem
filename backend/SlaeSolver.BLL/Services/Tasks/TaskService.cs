@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using Microsoft.Extensions.Options;
-using SlaeSolver.BLL.DTOs;
+﻿using Microsoft.Extensions.Options;
 using SlaeSolver.BLL.DTOs.Tasks;
 using SlaeSolver.BLL.Models;
 using SlaeSolver.BLL.Options;
@@ -67,8 +65,7 @@ public class TaskService: ITaskService
         await _taskRepository.AddAsync(task);
         await _taskRepository.SaveChangesAsync();
 
-        return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
-            task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt);
+        return ToDto(task);
     }
 
     private static void ValidateSystem(int n, double[][] matrix, double[] rightSide)
@@ -115,8 +112,8 @@ public class TaskService: ITaskService
         {
             throw new NotFoundException("такої таски не було знайдено");
         }
-        return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
-            task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt);
+
+        return ToDto(task);
     }
 
     public async Task<IEnumerable<TaskDto>> GetHistoryAsync(Guid userId, int page, int pageSize)
@@ -132,17 +129,7 @@ public class TaskService: ITaskService
         }
         IEnumerable<TaskEntitie> tasks = await _taskRepository.GetByUserAsync(userId, page, pageSize);
 
-        var taskDtos = tasks.Select(t => new TaskDto(
-            t.Id,
-            t.MatrixSize,
-            t.Status.ToString(),
-            t.Progress,
-            t.IsCanceled,
-            t.ErrorMessage,
-            t.CreatedAt,
-            t.StartedAt,
-            t.CompletedAt
-        ));
+        var taskDtos = tasks.Select(t => ToDto(t));
         return taskDtos;
     }
 
@@ -159,8 +146,7 @@ public class TaskService: ITaskService
         
         await _taskRepository.SaveChangesAsync();
 
-        return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
-            task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt);
+        return ToDto(task);
     }
 
     public async Task<TaskResultDto> GetResultAsync(Guid userId, Guid taskId)
@@ -179,5 +165,11 @@ public class TaskService: ITaskService
         var result = await _fileStorage.ReadResultAsync(task.ResultFilePath);
 
         return new TaskResultDto(task.Id, result.Solution, result.Iterations, result.Residual);
+    }
+
+    private static TaskDto ToDto(TaskEntitie task)
+    {
+        return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
+            task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt); 
     }
 }

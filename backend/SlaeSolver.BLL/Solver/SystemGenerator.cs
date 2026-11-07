@@ -4,19 +4,27 @@ namespace SlaeSolver.BLL.Solver;
 
 public static class SystemGenerator
 {
+    private const double DominanceRatio = 0.998;
     public static TaskParameters Generate(int n)
     {
         double[] RightSide = new double[n];
         double[][] Matrix = new double[n][];
-        Random rnd = new Random(42);
+        Random rnd = Random.Shared;
+        
         for (int i = 0; i < n; i++)
         {
             Matrix[i] = new double[n];
-            RightSide[i] = rnd.NextDouble() * 100;
+            double offSum = 0;
             for (int j = 0; j < n; j++)
             {
-                Matrix[i][j] = rnd.NextDouble() * 100;
+                if (j != i)
+                {
+                    Matrix[i][j] = rnd.NextDouble();
+                    offSum += Matrix[i][j];
+                }
             }
+            Matrix[i][i] = offSum / DominanceRatio + 1;
+            RightSide[i] = offSum + Matrix[i][i];
         }
 
         return new TaskParameters(n, Matrix, RightSide);

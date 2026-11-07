@@ -1,3 +1,9 @@
 ﻿# Postman
 .postman/
 postman/
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+.env
