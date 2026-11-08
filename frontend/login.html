@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SlaeSolver — вхід</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <main class="auth">
+            <div class="lang">
+                <button type="button" id="lang-uk">УКР</button>
+                <button type="button" id="lang-en" class="secondary">EN</button>
+            </div>
+
+            <div class="auth-head">
+                <h1>SlaeSolver</h1>
+                <p class="muted">Розв'язування систем лінійних рівнянь методом Якобі</p>
+            </div>
+
+            <div class="card">
+                <div class="tabs" id="tabs">
+                    <button type="button" id="tab-login" class="active">Вхід</button>
+                    <button type="button" id="tab-register">Реєстрація</button>
+                </div>
+
+                <form id="login-form">
+                    <label>Email
+                        <input id="login-email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                    </label>
+                    <label>Пароль
+                        <div class="password">
+                            <input id="login-password" type="password" autocomplete="current-password" required>
+                            <button type="button" class="show-password" data-target="login-password">👁</button>
+                        </div>
+                    </label>
+                    <p id="login-error" class="error hidden"></p>
+                    <button type="submit">Увійти</button>
+                </form>
+
+                <form id="register-form" class="hidden">
+                    <label>Ім'я
+                        <input id="reg-first" type="text" autocomplete="given-name" required>
+                    </label>
+                    <label>Прізвище
+                        <input id="reg-last" type="text" autocomplete="family-name" required>
+                    </label>
+                    <label>Email
+                        <input id="reg-email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                    </label>
+                    <label>Пароль (від 8 до 100 символів)
+                        <div class="password">
+                            <input id="reg-password" type="password" minlength="8" maxlength="100" autocomplete="new-password" required>
+                            <button type="button" class="show-password" data-target="reg-password">👁</button>
+                        </div>
+                    </label>
+                    <label>Повторіть пароль
+                        <div class="password">
+                            <input id="reg-password-repeat" type="password" autocomplete="new-password" required>
+                            <button type="button" class="show-password" data-target="reg-password-repeat">👁</button>
+                        </div>
+                    </label>
+                    <p id="register-error" class="error hidden"></p>
+                    <button type="submit">Створити акаунт</button>
+                </form>
+
+                <form id="confirm-form" class="hidden">
+                    <p class="muted">Ми надіслали код на <b id="confirm-email"></b></p>
+                    <label>Код з листа
+                        <input id="confirm-code" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required>
+                    </label>
+                    <p id="confirm-error" class="error hidden"></p>
+                    <button type="submit">Підтвердити</button>
+                    <button type="button" id="resend-btn" class="secondary">Надіслати код ще раз</button>
+                </form>
+            </div>
+
+            <p class="muted center">З'єднання захищене HTTPS</p>
+        </main>
+
+        <script src="js/api.js"></script>
+        <script src="js/login.js"></script>
+    </body>
+</html>
