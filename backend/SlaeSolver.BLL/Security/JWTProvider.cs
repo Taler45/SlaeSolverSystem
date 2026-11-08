@@ -22,8 +22,9 @@ public class JWTProvider : IJWTProvider
         Claim[] claims =
         [
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new("UserFirstName", user.FirstName),
-            new("UserLastName", user.LastName),
+            new(ClaimTypes.GivenName, user.FirstName),
+            new(ClaimTypes.Surname, user.LastName),
+            new(ClaimTypes.Role, user.Role.ToString()),
             new(ClaimTypes.Email, user.Email)
         ];
 

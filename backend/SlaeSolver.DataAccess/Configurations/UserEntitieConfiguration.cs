@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SlaeSolver.Domain;
 using SlaeSolver.Domain.Entities;
 
 namespace SlaeSolver.DataAccess.Configurations;
@@ -28,6 +29,11 @@ public class UserEntitieConfiguration: IEntityTypeConfiguration<UserEntitie>
         builder.Property(u => u.PasswordHash)
             .IsRequired()
             .HasMaxLength(255);
+
+        builder.Property(u => u.Role)
+            .HasConversion<string>()
+            .HasMaxLength(20)
+            .HasDefaultValue(UserRole.User);
 
         builder.HasMany(u => u.TaskEntities)
             .WithOne(t => t.User)
