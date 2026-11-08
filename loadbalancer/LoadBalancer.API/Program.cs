@@ -1,41 +1,32 @@
+
+using LoadBalancer.API.Options;
+using LoadBalancer.API.Services;
+using LoadBalancer.API.Workers;
+
+DotNetEnv.Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+if (string.IsNullOrWhiteSpace(builder.Configuration["LoadBalancer:InternalApiKey"]))
+{
+    throw new InvalidOperationException("Не задано LoadBalancer:InternalApiKey");
+}
+
+builder.Services.Configure<LoadBalancerOptions>(builder.Configuration.GetSection("LoadBalancer"));
+
+builder.Services.AddHttpClient("backend", client => client.Timeout = TimeSpan.FromSeconds(30))
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        AllowAutoRedirect = false,
+        UseCookies = false
+    });
+
+builder.Services.AddSingleton<ServerRegistry>();
+builder.Services.AddSingleton<ProxyService>();
+builder.Services.AddHostedService<LoadPoller>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapGet("/lb/servers", (ServerRegistry registry) => registry.Snapshot());
+app.Map("/api/{**path}", (HttpContext context, ProxyService proxy) => proxy.HandleAsync(context)); 
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
