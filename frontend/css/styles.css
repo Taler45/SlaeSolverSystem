@@ -67,3 +67,52 @@ button.secondary:hover { background: #f3f4f6; }
 .auth { max-width: 400px; margin: 40px auto; padding: 0 16px; }
 .auth-head { text-align: center; margin-bottom: 20px; }
 .auth-head h1 { color: #2563eb; }
+
+h2 { margin: 0 0 12px; font-size: 18px; }
+.mono { font-family: monospace; }
+
+textarea { width: 100%; min-height: 90px; padding: 9px 12px; border: 1px solid #d5d9df; border-radius: 8px; font-family: monospace; }
+
+button.danger { background: #fff; color: #b91c1c; border-color: #f1b8b8; font-weight: 500; }
+button.small { padding: 4px 10px; font-size: 13px; }
+
+header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fff; border-bottom: 1px solid #e3e5e8; }
+header a { margin-left: 12px; color: #4b5563; text-decoration: none; }
+header a.active { color: #2563eb; font-weight: 600; }
+.logo { font-weight: 700; color: #2563eb; font-size: 18px; }
+.user { display: flex; align-items: center; gap: 10px; }
+
+main { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+.layout { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.layout > section { flex: 1 1 300px; max-width: 360px; }
+.layout > div { flex: 3 1 500px; min-width: 0; }
+.layout .card { margin-bottom: 16px; }
+
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.card-head h2 { margin: 0; }
+
+.mode { flex-direction: row; align-items: center; font-weight: normal; }
+.mode input { width: auto; }
+#manual-fields { display: flex; flex-direction: column; gap: 10px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+th { color: #6b7280; font-size: 12px; }
+
+.badge-Queued, .badge-InProgress, .badge-Done, .badge-Error, .badge-Canceled { padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+.badge-Queued { background: #fef3c7; }
+.badge-InProgress { background: #dbeafe; }
+.badge-Done { background: #dcfce7; }
+.badge-Error { background: #fee2e2; }
+.badge-Canceled { background: #f3f4f6; }
+
+.progress-cell { display: flex; align-items: center; gap: 8px; }
+.progress { width: 100px; height: 8px; background: #e5e7eb; border-radius: 4px; }
+.progress-fill { height: 100%; background: #2563eb; border-radius: 4px; }
+
+.pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+
+.result-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.result-stats div { flex: 1 1 100px; background: #f5f6f8; padding: 8px; border-radius: 6px; }
+pre { background: #f5f6f8; padding: 10px; border-radius: 6px; max-height: 240px; overflow: auto; }
