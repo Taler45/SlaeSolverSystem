@@ -36,7 +36,7 @@ public class AdminService: IAdminService
         foreach (var t in activeTasks)
         {
             adminTasks.Add(new AdminTaskDto(
-                t.Id, t.User.Email, t.MatrixSize, t.Status.ToString(), t.Progress, t.CreatedAt));
+                t.Id, t.User.Email, t.MatrixSize, t.Status.ToString(), t.Progress,t.ServerId, t.CreatedAt));
         }
 
         return new AdminOverviewDto(stats, adminTasks);

@@ -6,5 +6,6 @@ public record AdminTaskDto(
     int MatrixSize,
     string Status,
     int Progress,
+    string? ServerId,
     DateTime CreatedAt
     );
