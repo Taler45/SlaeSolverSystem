@@ -5,6 +5,7 @@ namespace SlaeSolver.Domain.Entities;
 public class UserEntitie
 {
     public Guid Id { get; private set; }
+    public UserRole Role { get; private set; } = UserRole.User;
     public string FirstName { get; private set; } 
     public string LastName { get; private set; }
     public string Email { get; private set; }

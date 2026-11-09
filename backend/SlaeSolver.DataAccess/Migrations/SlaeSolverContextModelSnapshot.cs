@@ -112,6 +112,13 @@ namespace SlaeSolver.DataAccess.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("User");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")

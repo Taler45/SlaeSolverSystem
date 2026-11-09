@@ -8,6 +8,7 @@ using SlaeSolver.API.Workers;
 using SlaeSolver.BLL.Execution;
 using SlaeSolver.BLL.Options;
 using SlaeSolver.BLL.Security;
+using SlaeSolver.BLL.Services.Admin;
 using SlaeSolver.BLL.Services.Auth;
 using SlaeSolver.BLL.Services.Tasks;
 using SlaeSolver.BLL.Storage;
@@ -31,6 +32,8 @@ builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddSingleton<RunningTasksRegistry>();
 builder.Services.AddSingleton<TaskQueueSignal>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 builder.Services.AddHostedService<TaskExecutor>();
 
