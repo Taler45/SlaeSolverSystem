@@ -70,7 +70,7 @@ public class TaskService: ITaskService
         await _taskRepository.SaveChangesAsync();
         _signal.Notify();
 
-        return ToDto(task);
+        return ToDto(task, await GetQueuePositionAsync(task));
     }
 
     private static void ValidateSystem(int n, double[][] matrix, double[] rightSide)
@@ -118,7 +118,7 @@ public class TaskService: ITaskService
             throw new NotFoundException("такої таски не було знайдено");
         }
 
-        return ToDto(task);
+        return ToDto(task, await GetQueuePositionAsync(task));
     }
 
     public async Task<IEnumerable<TaskDto>> GetHistoryAsync(Guid userId, int page, int pageSize)
@@ -134,7 +134,13 @@ public class TaskService: ITaskService
         }
         IEnumerable<TaskEntitie> tasks = await _taskRepository.GetByUserAsync(userId, page, pageSize);
 
-        var taskDtos = tasks.Select(t => ToDto(t));
+        var taskDtos = new List<TaskDto>();
+        
+        foreach (var task in tasks) 
+        {
+            taskDtos.Add(ToDto(task, await GetQueuePositionAsync(task)));
+        }
+        
         return taskDtos;
     }
 
@@ -151,7 +157,7 @@ public class TaskService: ITaskService
         
         await _taskRepository.SaveChangesAsync();
 
-        return ToDto(task);
+        return ToDto(task, await GetQueuePositionAsync(task));
     }
 
     public async Task<TaskResultDto> GetResultAsync(Guid userId, Guid taskId)
@@ -172,9 +178,22 @@ public class TaskService: ITaskService
         return new TaskResultDto(task.Id, result.Solution, result.Iterations, result.Residual);
     }
 
-    private static TaskDto ToDto(TaskEntitie task)
+    private async Task<int?> GetQueuePositionAsync(TaskEntitie t, CancellationToken ct = default)
     {
-        return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
-            task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt); 
+        ArgumentNullException.ThrowIfNull(t);
+        if (t.Status != CalculationStatus.Queued)
+        {
+            return null;
+        }
+        return await _taskRepository.CountQueuedBeforeAsync(t.CreatedAt, ct) + 1;
     }
+
+    private static TaskDto ToDto(TaskEntitie task,int? queuePosition = null)
+    {
+        
+        return new TaskDto(task.Id,task.MatrixSize,task.Status.ToString(),task.Progress,
+            task.IsCanceled,task.ErrorMessage,task.CreatedAt,task.StartedAt,task.CompletedAt, queuePosition);
+    }
+    
+    
 }

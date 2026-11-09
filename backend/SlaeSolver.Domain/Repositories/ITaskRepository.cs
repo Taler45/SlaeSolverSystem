@@ -13,6 +13,7 @@ public interface ITaskRepository
     Task<Guid?> ClaimNextQueuedAsync(string serverId);
     Task UpdateProgressAsync(Guid id, int progress);
     Task<IEnumerable<TaskEntitie>> GetInProgressByServerAsync(string serverId);
+    Task<int> CountQueuedBeforeAsync(DateTime createdAt, CancellationToken ct = default);
     
     Task SaveChangesAsync ();
 }

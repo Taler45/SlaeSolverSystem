@@ -9,5 +9,6 @@ public record TaskDto(
     string? ErrorMessage,
     DateTime CreatedAt,
     DateTime? StartedAt,
-    DateTime? CompletedAt
+    DateTime? CompletedAt,
+    int? QueuePosition
     );

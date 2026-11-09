@@ -100,6 +100,13 @@ public class TaskRepository: ITaskRepository
             .ToListAsync();
     }
 
+    public async Task<int> CountQueuedBeforeAsync(DateTime createdAt, CancellationToken ct = default)
+    {
+        return await _context.Tasks
+            .Where(t => t.Status == CalculationStatus.Queued && t.CreatedAt < createdAt)
+            .CountAsync(ct);
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
