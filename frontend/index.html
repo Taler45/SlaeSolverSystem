@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlaeSolver — задачі</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <span class="logo">SlaeSolver</span>
+            <a href="index.html" class="active">Задачі</a>
+            <a href="admin.html" id="admin-link" class="hidden">Адмін-панель</a>
+        </nav>
+        <div class="user">
+            <span id="user-name"></span>
+            <button type="button" id="logout-btn" class="secondary small">Вийти</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="layout">
+            <section class="card">
+                <h2>Нова задача</h2>
+
+                <form id="task-form">
+                    <p class="muted">Активних: <b id="active-count">0</b> з 3</p>
+
+                    <label>Кількість невідомих (від 1 до 2000)
+                        <input id="matrix-size" type="number" min="1" max="2000" value="500" required>
+                    </label>
+
+                    <label class="mode">
+                        <input type="radio" name="mode" value="generate" checked>
+                        Згенерувати автоматично
+                    </label>
+                    <label class="mode">
+                        <input type="radio" name="mode" value="manual">
+                        Ввести свою матрицю
+                    </label>
+
+                    <div id="manual-fields" class="hidden">
+                        <label>Матриця A (рядок на рядок, числа через пробіл)
+                            <textarea id="matrix" placeholder="4 1 1&#10;1 5 2&#10;1 1 6"></textarea>
+                        </label>
+                        <label>Права частина b (числа через пробіл)
+                            <input id="right-side" type="text" placeholder="6 8 8">
+                        </label>
+                    </div>
+
+                    <p id="task-error" class="error hidden"></p>
+                    <button type="submit">Розв'язати</button>
+                </form>
+            </section>
+
+            <div>
+                <section class="card">
+                    <div class="card-head">
+                        <h2>Мої задачі</h2>
+                        <span class="muted">оновлюється кожні 2 с</span>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Задача</th>
+                                    <th>n</th>
+                                    <th>Статус</th>
+                                    <th>Прогрес</th>
+                                    <th>Створено</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasks-body"></tbody>
+                        </table>
+                    </div>
+                    <p id="tasks-empty" class="muted hidden">Задач ще немає</p>
+
+                    <div class="pagination">
+                        <button type="button" id="prev-page" class="secondary small">← Попередня</button>
+                        <span class="muted">Сторінка <b id="page-number">1</b></span>
+                        <button type="button" id="next-page" class="secondary small">Наступна →</button>
+                    </div>
+                </section>
+
+                <section class="card hidden" id="result-card">
+                    <div class="card-head">
+                        <h2>Результат <span id="result-id" class="mono"></span></h2>
+                        <button type="button" id="result-close" class="secondary small">✕</button>
+                    </div>
+
+                    <div class="result-stats">
+                        <div><p class="muted">Невідомих</p><b id="result-n"></b></div>
+                        <div><p class="muted">Ітерацій</p><b id="result-iterations"></b></div>
+                        <div><p class="muted">Нев'язка</p><b id="result-residual"></b></div>
+                        <div><p class="muted">Час</p><b id="result-time"></b></div>
+                    </div>
+
+                    <pre id="result-solution"></pre>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/tasks.js"></script>
+</body>
+</html>

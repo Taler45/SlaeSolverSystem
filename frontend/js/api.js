@@ -68,3 +68,11 @@ function requireAuth(){
         location.href = "login.html"
     }
 }
+
+function decodeJwt(token) {
+    const parts = token.split(".")
+    const payload = parts[1]
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/")
+    const text = decodeURIComponent(escape(atob(base64)))
+    return JSON.parse(text)
+}
