@@ -20,6 +20,7 @@ public class AdminRepository: IAdminRepository
     {
         return await _context.Tasks
             .AsNoTracking()
+            .Include(t=>t.User)
             .Where(t => t.Status == CalculationStatus.InProgress || t.Status == CalculationStatus.Queued)
             .OrderBy(t => t.CreatedAt)
             .ToListAsync(ct);

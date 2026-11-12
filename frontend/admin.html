@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlaeSolver — адмін-панель</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div>
+            <span class="logo">SlaeSolver</span>
+            <a href="index.html">Задачі</a>
+            <a href="admin.html" class="active">Адмін-панель</a>
+        </div>
+        <div class="user">
+            <span id="user-name"></span>
+            <button type="button" id="logout-btn" class="secondary small">Вийти</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="card-head">
+            <h2>Адмін-панель</h2>
+            <span class="muted">Оновлено: <span id="updated-at">—</span></span>
+        </div>
+
+        <div class="stats">
+            <div class="card stat"><span class="muted">У черзі</span><b id="stat-queued">0</b></div>
+            <div class="card stat"><span class="muted">Рахується</span><b id="stat-in-progress">0</b></div>
+            <div class="card stat"><span class="muted">Готово за годину</span><b id="stat-done-hour">0</b></div>
+            <div class="card stat"><span class="muted">Помилок за годину</span><b id="stat-failed-hour">0</b></div>
+            <div class="card stat"><span class="muted">Готово всього</span><b id="stat-done-total">0</b></div>
+            <div class="card stat"><span class="muted">Помилок всього</span><b id="stat-failed-total">0</b></div>
+            <div class="card stat"><span class="muted">Скасовано всього</span><b id="stat-canceled-total">0</b></div>
+        </div>
+
+        <h2>Сервери</h2>
+        <div class="stats" id="servers"></div>
+
+        <div class="card">
+            <h2>Активні задачі</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Задача</th>
+                            <th>Користувач</th>
+                            <th>n</th>
+                            <th>Сервер</th>
+                            <th>Статус</th>
+                            <th>Прогрес</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-tasks"></tbody>
+                </table>
+            </div>
+            <p id="admin-empty" class="muted hidden">Активних задач немає</p>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

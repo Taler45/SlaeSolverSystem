@@ -5,8 +5,11 @@ const manualFields = document.getElementById("manual-fields")
 const taskError = document.getElementById("task-error")
 const tasksBody = document.getElementById("tasks-body")
 const resultCard = document.getElementById("result-card")
+const submitBtn = taskForm.querySelector('button[type="submit"]')
 
 let page = 1
+let isSubmitting = false
+let activeCount = 0
 
 const statusText = {
     Queued: "У черзі",
@@ -17,9 +20,14 @@ const statusText = {
 }
 
 const user = decodeJwt(getToken())
-document.getElementById("user-name").textContent = user.given_name + " " + user.family_name
 
-if(user.role === "Admin"){
+const firstName = user["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]
+const lastName = user["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]
+const role = user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+
+document.getElementById("user-name").textContent = firstName + " " + lastName
+
+if (role === "Admin") {
     document.getElementById("admin-link").classList.remove("hidden")
 }
 
@@ -34,6 +42,10 @@ document.querySelectorAll('input[name="mode"]').forEach(radio => {
         }
     })
 })
+
+function updateSubmitButton(){
+    submitBtn.disabled = isSubmitting || activeCount >= 3
+}
 
 function progressHtml(task){
     if(task.status === "Queued"){
@@ -99,6 +111,8 @@ async function loadTasks(){
         }
 
         document.getElementById("active-count").textContent = active
+        activeCount = active
+        updateSubmitButton()
         document.getElementById("page-number").textContent = page
         document.getElementById("tasks-empty").classList.toggle("hidden", tasks.length > 0)
         document.getElementById("prev-page").disabled = page === 1
@@ -171,12 +185,18 @@ taskForm.addEventListener("submit", async (e) => {
         body.rightSide = document.getElementById("right-side").value.trim().split(/\s+/).map(Number)
     }
 
+    isSubmitting = true
+    updateSubmitButton()
+
     try {
         await api("/api/tasks/create/task", "POST", body)
         page = 1
-        loadTasks()
     } catch (err) {
         showError(taskError, err.message)
+    } finally {
+        await loadTasks()
+        isSubmitting = false
+        updateSubmitButton()
     }
 })
 

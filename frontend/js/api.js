@@ -40,10 +40,6 @@ async function api(url, method = "GET", body = null){
         throw new Error(getErrorMessage(problem, response.status))
     }
 
-    if(response.status === 204){
-        return null
-    }
-
     return response.json()
 }
 
