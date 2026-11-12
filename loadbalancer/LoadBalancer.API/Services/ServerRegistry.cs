@@ -107,8 +107,6 @@ public class ServerRegistry
     {
         lock (_lock)
         {
-
-
             var cirkleSer = _servers.Where(s => (s.Id != expectedId) && (s.IsAlive == true)).ToList();
             if (cirkleSer.Count == 0)
             {
