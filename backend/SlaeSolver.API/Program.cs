@@ -1,4 +1,6 @@
 using System.Text;
+using Amazon.Runtime;
+using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SlaeSolver.DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -28,12 +30,21 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IJWTProvider, JWTProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
+builder.Services.AddSingleton<IFileStorage, S3FileStorage>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddSingleton<RunningTasksRegistry>();
 builder.Services.AddSingleton<TaskQueueSignal>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(
+    new AmazonS3Config
+    {
+        ServiceURL = configuration["Storage:ServiceUrl"],
+        ForcePathStyle = true,
+        RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
+        ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED 
+    }
+));
 
 builder.Services.AddHostedService<TaskExecutor>();
 
